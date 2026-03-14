@@ -1,6 +1,5 @@
-/* =========================
-   GLOBAL RESET
-========================= */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -8,93 +7,217 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #ffffff;
-  color: #333;
+  font-family: 'Outfit', sans-serif;
+  background-color: #f8f9fa;
+  color: #1a1a1a;
+  overflow-x: hidden;
 }
 
 /* =========================
    NAVBAR
 ========================= */
 .navbar {
-  background: #0d6efd;
-  color: white;
-  padding: 15px 30px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 18px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+}
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  padding: 12px 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .logo {
-  font-size: 1.6rem;
-  font-weight: bold;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: #0d6efd;
+  transition: color 0.4s;
 }
+
+.navbar.scrolled .logo { color: #1a1a1a; }
 
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 30px;
+  align-items: center;
+  gap: 35px;
 }
 
 .nav-links li a {
   color: white;
   text-decoration: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: all 0.3s;
+  padding: 8px 16px;
+  border-radius: 12px;
 }
 
-.nav-links li a:hover {
-  text-decoration: underline;
+.navbar.scrolled .nav-links li a { color: #444; }
+
+.nav-links li a:hover, .nav-links li a.active {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
+
+.navbar.scrolled .nav-links li a:hover, .navbar.scrolled .nav-links li a.active {
+  background: rgba(13, 110, 253, 0.08);
+  color: #0d6efd;
 }
 
 /* =========================
    HERO SECTION
 ========================= */
-.hero {
-  height: 85vh;
-  background: linear-gradient(
-      rgba(13, 110, 253, 0.6),
-      rgba(0, 0, 0, 0.75)
-    ),
-    url("https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg");
-  background-size: cover;
-  background-position: center;
+/* =========================
+   MODERN HERO SECTION
+========================= */
+.hero-modern {
+  height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+
+.hero-modern::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.75;
+  filter: brightness(0.85);
+  animation: heroZoom 30s infinite alternate;
+}
+
+@keyframes heroZoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+}
+
+.hero-modern-content {
+  position: relative;
+  z-index: 2;
   text-align: center;
+  max-width: 900px;
+  padding: 0 40px;
   color: white;
+  animation: slideInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.hero-content {
-  max-width: 700px;
-}
-
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.hero p {
-  font-size: 1.2rem;
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
   margin-bottom: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
-.hero-btn {
-  background: white;
+.hero-modern-content h1 {
+  font-size: 4.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 25px;
+  letter-spacing: -2px;
+}
+
+.hero-modern-content h1 span {
   color: #0d6efd;
-  padding: 12px 28px;
-  text-decoration: none;
-  font-size: 1.1rem;
-  border-radius: 6px;
-  font-weight: bold;
+  background: linear-gradient(135deg, #0d6efd, #6610f2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.hero-btn:hover {
-  background: #e9ecef;
+.hero-modern-content p {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  font-weight: 400;
 }
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.primary-btn {
+  background: #0d6efd;
+  color: white;
+  border: none;
+  padding: 18px 45px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 15px 35px rgba(13, 110, 253, 0.3);
+}
+
+.primary-btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(13, 110, 253, 0.4);
+}
+
+.secondary-btn {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 18px 45px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s;
+}
+
+.secondary-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-5px);
+}
+
+.hero-stats {
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 40px;
+}
+
+.hero-stats h3 { font-size: 2.2rem; margin-bottom: 5px; }
+.hero-stats span { opacity: 0.7; font-weight: 500; }
 
 /* =========================
    WHY CHOOSE US
@@ -362,15 +485,37 @@ body {
 }/* =========================
    INTERACTIVE LOGIN
 ========================= */
+@keyframes bgZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
 .login-container {
-  min-height: 85vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #eef3ff, #f8f9fa);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.7)), url("https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  animation: bgZoom 25s ease-in-out infinite alternate;
 }
 
 .login-card {
+  position: relative;
+  z-index: 1;
   width: 380px;
   background: white;
   padding: 40px 32px;
@@ -1168,6 +1313,7 @@ body {
 .hero-modern-content h1 span {
   background: linear-gradient(135deg, #0d6efd, #20c997);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

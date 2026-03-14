@@ -5,79 +5,9 @@ function Packages() {
   const [days, setDays] = useState('')
   const [plan, setPlan] = useState([])
 
-  // 🌍 10 DESTINATIONS WITH FAMOUS PLACES
-  const destinationPlaces = {
-    Goa: [
-      'Baga Beach',
-      'Calangute Beach',
-      'Fort Aguada',
-      'Anjuna Beach',
-      'Dudhsagar Waterfalls'
-    ],
-    Manali: [
-      'Hadimba Temple',
-      'Solang Valley',
-      'Rohtang Pass',
-      'Old Manali',
-      'Vashisht Hot Springs'
-    ],
-    Kerala: [
-      'Munnar Tea Gardens',
-      'Alleppey Houseboat',
-      'Kochi Fort',
-      'Thekkady Wildlife Sanctuary',
-      'Varkala Beach'
-    ],
-    Jaipur: [
-      'Amber Fort',
-      'Hawa Mahal',
-      'City Palace',
-      'Jantar Mantar',
-      'Nahargarh Fort'
-    ],
-    Maldives: [
-      'Beach Resort',
-      'Snorkeling',
-      'Island Hopping',
-      'Sunset Cruise',
-      'Water Villas'
-    ],
-    Paris: [
-      'Eiffel Tower',
-      'Louvre Museum',
-      'Notre-Dame Cathedral',
-      'Seine River Cruise',
-      'Champs-Élysées'
-    ],
-    Dubai: [
-      'Burj Khalifa',
-      'Desert Safari',
-      'Dubai Mall',
-      'Palm Jumeirah',
-      'Dubai Marina'
-    ],
-    Singapore: [
-      'Marina Bay Sands',
-      'Sentosa Island',
-      'Universal Studios',
-      'Gardens by the Bay',
-      'Merlion Park'
-    ],
-    Switzerland: [
-      'Zurich City Tour',
-      'Mt. Titlis',
-      'Lucerne',
-      'Interlaken',
-      'Jungfraujoch'
-    ],
-    Thailand: [
-      'Bangkok City Tour',
-      'Phi Phi Islands',
-      'Pattaya Beach',
-      'Floating Market',
-      'Phuket Nightlife'
-    ]
-  }
+  // 🌍 ACTIVE DATA
+  const savedDestinations = JSON.parse(localStorage.getItem("adminDestinations")) || [];
+  const adminPackages = JSON.parse(localStorage.getItem("adminPackages")) || {};
 
   // 🔁 GENERATE DAY-WISE PLAN
   const generatePlan = (selectedPlace, selectedDays) => {
@@ -86,31 +16,27 @@ function Packages() {
       return
     }
 
-    const placesList = destinationPlaces[selectedPlace]
-    const itinerary = []
-
-    for (let i = 1; i <= selectedDays; i++) {
-      if (i === selectedDays) {
+    // Try to get ITINERARY from adminPackages
+    const realPkg = adminPackages[selectedPlace]?.[selectedDays];
+    
+    if (realPkg && realPkg.dailyPlans) {
+      const itinerary = Object.entries(realPkg.dailyPlans).map(([day, data]) => ({
+        day: Number(day),
+        description: data.plan,
+        photo: data.photo
+      })).sort((a,b) => a.day - b.day);
+      setPlan(itinerary);
+    } else {
+      // Fallback for missing itinerary
+      const itinerary = []
+      for (let i = 1; i <= selectedDays; i++) {
         itinerary.push({
           day: i,
-          description: 'Shopping, packing up memories, and departure.'
-        })
-      } else if (i === 1) {
-        itinerary.push({
-          day: i,
-          description: 'Arrival, hotel check-in, and local sightseeing.'
-        })
-      } else {
-        itinerary.push({
-          day: i,
-          description: `Visit ${
-            placesList[(i - 2) % placesList.length]
-          } and nearby attractions.`
+          description: i === 1 ? 'Arrival and hotel check-in.' : i === selectedDays ? 'Packing and departure.' : `Exploring ${selectedPlace} landmarks.`
         })
       }
+      setPlan(itinerary)
     }
-
-    setPlan(itinerary)
   }
 
   return (
@@ -134,20 +60,27 @@ function Packages() {
             <h3>🌍 Select Destination</h3>
             <p>Pick the place you dream to explore</p>
 
-            <select
-              className="choose-select"
-              value={place}
-              onChange={(e) => {
-                const value = e.target.value
-                setPlace(value)
-                generatePlan(value, days)
-              }}
-            >
-              <option value="">Choose Destination</option>
-              {Object.keys(destinationPlaces).map((dest) => (
-                <option key={dest} value={dest}>{dest}</option>
-              ))}
-            </select>
+              <select
+                className="choose-select"
+                value={place}
+                onChange={(e) => {
+                  const value = e.target.value
+                  setPlace(value)
+                  generatePlan(value, days)
+                }}
+              >
+                <option value="">Choose Destination</option>
+                <optgroup label="🌍 World Packages">
+                  {savedDestinations.filter(d => (d.category || 'world') === 'world').map(d => (
+                    <option key={d.name} value={d.name}>{d.name}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="🇮🇳 India Packages">
+                  {savedDestinations.filter(d => d.category === 'india').map(d => (
+                    <option key={d.name} value={d.name}>{d.name}</option>
+                  ))}
+                </optgroup>
+              </select>
           </div>
 
           {/* STEP 2 */}

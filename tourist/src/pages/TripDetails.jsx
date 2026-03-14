@@ -6,6 +6,7 @@ function TripDetails() {
   const [params] = useSearchParams();
   const destination = params.get("destination");
   const days = params.get("days");
+  const persons = params.get("persons");
   const price = params.get("price");
 
   const [method, setMethod] = useState("upi");
@@ -31,7 +32,9 @@ function TripDetails() {
 
           {/* HEADER */}
           <h1 className="pay-title">💳 Complete Your Payment</h1>
-          <h2 className="pay-sub">✨ {destination} Travel Package</h2>
+          <h2 className="pay-sub">
+            ✨ {destination} Travel Package {persons ? `for ${persons} Person${persons > 1 ? "s" : ""}` : ""}
+          </h2>
           <p className="pay-info">{days} Days Trip</p>
 
           <h3 className="amount">Total Amount: ₹{Number(price).toLocaleString()}</h3>
